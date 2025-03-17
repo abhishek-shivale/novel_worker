@@ -263,7 +263,7 @@ app.get("/novel-book/:name",  async (c) => {
   return novelData ? c.json({ novelData, description, allChapters }) : c.json({sucess: false});
 });
 
-app.get("/novel-book/:name/:chapter", cacheMiddleware, async (c) => {
+app.get("/novel-book/:name/:chapter", async (c) => {
   const name = c.req.param("name");
   const chapter = c.req.param("chapter");
   const $ = await getFun(`${BASE_URL}/novel-book/${name}/${chapter}`);
