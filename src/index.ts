@@ -70,43 +70,43 @@ function getNovel($: CheerioAPI) {
   return novels.filter((novel) => novel.image && novel.link && novel.title);
 }
 
-// app.use(
-//   "/*",
-//   cors({
-//    origin: "https://webnovelhub.online/*",
-//   })
-// );
-// app.use('/*', async (c, next) => {
-//   const origin = c.req.header('origin')
-//   const userAgent = c.req.header('user-agent') || ''
+app.use(
+  "/*",
+  cors({
+   origin: ["https://webnovelhub.online/*", "https://webnovelhub.online"],
+  })
+);
+app.use('/*', async (c, next) => {
+  const origin = c.req.header('origin')
+  const userAgent = c.req.header('user-agent') || ''
 
-//   if (origin === 'https://webnovelhub.online') {
-//     c.header('Access-Control-Allow-Origin', origin)
-//     c.header('Access-Control-Allow-Methods', 'GET, POST')
-//     c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  if (origin === 'https://webnovelhub.online') {
+    c.header('Access-Control-Allow-Origin', origin)
+    c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
-//     if (c.req.method === 'OPTIONS') {
-//       return c.text('', 200)
-//     }
+    if (c.req.method === 'OPTIONS') {
+      return c.text('', 200)
+    }
 
-//     await next()
-//     return
-//   }
+    await next()
+    return
+  }
 
-//   if (userAgent.includes('Postman')) {
-//     return c.json({ error: 'Access denied' }, 403)
-//   }
+  if (userAgent.includes('Postman')) {
+    return c.json({ error: 'Access denied' }, 403)
+  }
 
-//   if (userAgent.includes('Mozilla') ||
-//       userAgent.includes('Chrome') ||
-//       userAgent.includes('Safari') ||
-//       userAgent.includes('Firefox') ||
-//       userAgent.includes('Edge')) {
-//     return c.json({ error: 'Access denied' }, 403)
-//   }
+  if (userAgent.includes('Mozilla') ||
+      userAgent.includes('Chrome') ||
+      userAgent.includes('Safari') ||
+      userAgent.includes('Firefox') ||
+      userAgent.includes('Edge')) {
+    return c.json({ error: 'Access denied' }, 403)
+  }
 
-//   return c.json({ error: 'Access denied' }, 403)
-// })
+  return c.json({ error: 'Access denied' }, 403)
+})
 
 app.get("/", cacheMiddleware, async (c) => {
   const $ = await getFun(`${BASE_URL}`);
