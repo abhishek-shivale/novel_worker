@@ -73,7 +73,7 @@ function getNovel($: CheerioAPI) {
 app.use(
   "/*",
   cors({
-   origin: ["https://webnovelhub.online/*", "https://webnovelhub.online"],
+   origin: ["https://webnovelhub.online/*", "https://webnovelhub.online", "http://localhost:3000"],
   })
 );
 app.use('/*', async (c, next) => {
