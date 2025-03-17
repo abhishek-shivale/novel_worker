@@ -391,7 +391,7 @@ app.get("/media/:image_length/:image_name", MediaMiddleware, async (c) => {
   }
 });
 
-app.get('/health', (c) => {
+app.get('/status/health', (c) => {
   return c.json({ status: 'ok' })
 })
 
