@@ -109,7 +109,7 @@ app.use(
 //   return c.json({ error: 'Access denied' }, 403)
 // })
 
-app.get("/", cacheMiddleware, async (c) => {
+app.get("/", async (c) => {
   const $ = await getFun(`${BASE_URL}`);
   const genres: { name: string; link: string }[] = [];
   /*
@@ -155,21 +155,17 @@ app.get("/", cacheMiddleware, async (c) => {
   let x = await getFun(`${BASE_URL}/sort/novelbin-daily-update`);
   latest_novels = getNovel(x);
 
-  return c.json({
-    genres: genres.slice(6),
-    top_novels: novels,
-    latest_novels: latest_novels,
-  });
+  return c.json({ genres, novels, latest_novels });
 });
 
-app.get("/:genre", cacheMiddleware, async (c) => {
+app.get("/:genre", async (c) => {
   const genre = c.req.param("genre");
   const $ = await getFun(`${BASE_URL}/novelbin-genres/${genre}`);
   let novels = getNovel($);
   return c.json({ genre: novels });
 });
 
-app.get("/novel-book/:name",  cacheMiddleware, async (c) => {
+app.get("/novel-book/:name",  async (c) => {
   const all_chapter = c.req.query("all");
   const name = c.req.param("name");
   const $ = await getFun(`${BASE_URL}/novel-book/${name}`);
@@ -260,8 +256,7 @@ app.get("/novel-book/:name",  cacheMiddleware, async (c) => {
       link: chapter.url.replace(BASE_URL, ""),
     }));
   }
-  // return c.text($.html());
-  return c.json({ novelData, description, allChapters });
+  return novelData ? c.json({ novelData, description, allChapters }) : c.json({sucess: false});
 });
 
 app.get("/novel-book/:name/:chapter", cacheMiddleware, async (c) => {
