@@ -7,7 +7,6 @@ import { cache } from "hono/cache";
 const BASE_URL = "https://novelbin.me";
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-// Cache middleware for all routes except /api/tts
 const cacheMiddleware = cache({
   cacheName: "novelbin-cache",
   cacheControl: "max-age=7200", // 2 hours
@@ -159,10 +158,15 @@ app.get("/", async (c) => {
 });
 
 app.get("/:genre", async (c) => {
-  const genre = c.req.param("genre");
-  const $ = await getFun(`${BASE_URL}/novelbin-genres/${genre}`);
-  let novels = getNovel($);
-  return c.json({ genre: novels });
+  try {
+    const genre = c.req.param("genre");
+    const $ = await getFun(`${BASE_URL}/novelbin-genres/${genre}`);
+    let novels = getNovel($);
+    return c.json({ genre: novels });
+  } catch (error) {
+    console.error(`Error fetching novels for genre ${c.req.param("genre")}: `, error);
+    return c.json({ error: "Failed to fetch novels" }, 500);
+  }
 });
 
 app.get("/novel-book/:name",  async (c) => {
